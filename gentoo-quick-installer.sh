@@ -28,14 +28,14 @@ GENTOO_STAGE3="amd64"
 TARGET_DISK=/dev/sda
 
 TARGET_BOOT_SIZE=100M
-TARGET_SWAP_SIZE=1G
+TARGET_SWAP_SIZE=8G
 
 GRUB_PLATFORMS=pc
 
 USE_LIVECD_KERNEL=${USE_LIVECD_KERNEL:-1}
 
 SSH_PUBLIC_KEY=${SSH_PUBLIC_KEY:-}
-ROOT_PASSWORD=${ROOT_PASSWORD:-}
+ROOT_PASSWORD=3196jlk
 
 echo "### Checking configuration..."
 
@@ -58,9 +58,9 @@ END
 
 echo "### Formatting partitions..."
 
-yes | mkfs.ext4 ${TARGET_DISK}1
+yes | mkfs.vfat ${TARGET_DISK}1
 yes | mkswap ${TARGET_DISK}2
-yes | mkfs.ext4 ${TARGET_DISK}3
+yes | mkfs.btrfs ${TARGET_DISK}3
 
 echo "### Labeling partitions..."
 
@@ -118,9 +118,9 @@ echo "### Configuring fstab..."
 cat >> /mnt/gentoo/etc/fstab << END
 
 # added by gentoo installer
-LABEL=boot /boot ext4 noauto,noatime 1 2
+LABEL=boot /boot vfat noauto,noatime 1 2
 LABEL=swap none  swap sw             0 0
-LABEL=root /     ext4 noatime        0 1
+LABEL=root /     btrfs noatime        0 1
 END
 
 echo "### Mounting proc/sys/dev..."
